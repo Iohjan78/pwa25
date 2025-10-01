@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Selección de Permisos</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.7.16/vue.min.js"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <p>Nombre: {{persona.nombre}}</p>
+      <p>Edad: {{persona.edad}}</p>
+      <p>Ciudad: {{persona.ciudad}}</p>
+      <p>Hola, mi nombre es {{persona.nombre}}, tengo {{persona.edad}} y vivo en {{persona.ciudad}}</p>
+    </div>
+
+    <script>
+      var app = new Vue({
+        el: "#app",
+        data: {
+          persona: {
+            nombre: "Ana García",
+            edad: 30,
+            ciudad: "Tupungato",
+          },
+        },
+        methods: {},
+        computed: {},
+        mounted() {
+          console.log("Vue Mounted");
+        },
+      });
+    </script>
+  </body>
+</html>
