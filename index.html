@@ -16,6 +16,10 @@
       <p>Edad: {{persona.edad}}</p>
       <p>Ciudad: {{persona.ciudad}}</p>
       <p>Hola, mi nombre es {{persona.nombre}}, tengo {{persona.edad}} y vivo en {{persona.ciudad}}</p>
+      <br>
+      <hr>
+      <h4>Valor: {{valor}}</h4>
+      <button class="" v-on:click="aumentar()">Aumentar</button><button class="" v-on:click="disminuir" >Disminuir</button>
     </div>
 
     <script>
@@ -27,8 +31,16 @@
             edad: 30,
             ciudad: "Tupungato",
           },
+          valor : 0,
         },
-        methods: {},
+        methods: {
+          aumentar(){
+            this.valor++;
+          },
+          disminuir(){
+            this.valor--;
+          }
+        },
         computed: {},
         mounted() {
           console.log("Vue Mounted");
