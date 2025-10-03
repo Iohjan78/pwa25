@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Selección de Permisos</title>
+    <title>Lista de Tareas Vue</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.7.16/vue.min.js"></script>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css"
@@ -16,10 +16,24 @@
       <p>Edad: {{persona.edad}}</p>
       <p>Ciudad: {{persona.ciudad}}</p>
       <p>Hola, mi nombre es {{persona.nombre}}, tengo {{persona.edad}} y vivo en {{persona.ciudad}}</p>
-      <br>
       <hr>
+
       <h4>Valor: {{valor}}</h4>
-      <button class="" v-on:click="aumentar()">Aumentar</button><button class="" v-on:click="disminuir" >Disminuir</button>
+      <button class="" v-on:click="aumentar()">Incrementar</button>
+      <button class="" v-on:click="disminuir()">Decrementar</button>
+      <hr>
+
+      <h4>Lista de Tareas</h4>
+      <input type="text" v-model="nuevaTarea" placeholder="Nueva Tarea" />
+      <button v-on:click="agregarTarea()">Agregar Tarea</button>
+      <ul>
+        <li v-for="tarea in tareas" :key="tarea.id">
+          <input type="checkbox" v-model="tarea.completada" @change="actualizarTarea(tarea)"/>
+          <span :style="{ textDecoration: tarea.completada ? 'line-through' : 'none' }">{{ tarea.texto }}</span>
+        </li>
+      </ul>
+      <p>Total de Tareas: {{ totalTareas }}</p>
+      <p>Tareas Pendientes: {{ tareasPendientes }}</p>
     </div>
 
     <script>
@@ -31,17 +45,40 @@
             edad: 30,
             ciudad: "Tupungato",
           },
-          valor : 0,
+          valor: 0,
+          nuevaTarea: "",
+          tareas: [
+            { id: 1, texto: "pagar luz", completada: false },
+            { id: 2, texto: "llamar al seguro", completada: false },
+            { id: 3, texto: "comprar carne", completada: false },
+          ],
         },
         methods: {
-          aumentar(){
+          aumentar() {
             this.valor++;
           },
-          disminuir(){
+          disminuir() {
             this.valor--;
-          }
+          },
+          agregarTarea() {
+            if (this.nuevaTarea.trim() !== "") {
+              this.tareas.push({
+                id: this.tareas.length + 1,
+                texto: this.nuevaTarea,
+                completada: false,
+              });
+              this.nuevaTarea = "";
+            }
+          },
         },
-        computed: {},
+        computed: {
+          totalTareas() {
+            return this.tareas.length;
+          },
+          tareasPendientes() {
+            return this.tareas.filter((tarea) => !tarea.completada).length;
+          },
+        },
         mounted() {
           console.log("Vue Mounted");
         },
