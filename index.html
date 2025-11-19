@@ -74,7 +74,7 @@
             { id: 2, texto: "llamar al seguro", completada: false },
             { id: 3, texto: "comprar carne", completada: false },
           ],
-          listaApp2: [], // Lista para monitorear hooks de app2
+          listaApp2: [],
         },
         methods: {
           aumentar() {
@@ -134,7 +134,6 @@
                   timestamp: Date.now(),
                 });
 
-                // Countdown para destruir app2
                 const interval = setInterval(() => {
                   this.countdown--;
                   if (this.countdown === 0) {
