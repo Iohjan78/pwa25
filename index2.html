@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TP2 - Ejercicio 1: Hooks</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.7.16/vue.min.js"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <h2>Ejercicio 1 - Monitoreo de Hooks (App2)</h2>
+
+      <!-- tp2 punto 1 -->
+      <h4>Hooks de App2 (Monitoreando en vivo):</h4>
+      <ul>
+        <li v-for="evento in listaApp2" :key="evento.id">
+          <strong>{{ evento.nombre }}</strong>: {{ evento.timestamp }}
+        </li>
+      </ul>
+
+      <hr />
+
+      <!-- tp2 punto 2 -->
+      <h4>Punto 2 - Axios</h4>
+      <input type="number" v-model="postId" placeholder="ID del post" />
+      <button @click="cargarPost()">Obtener Post</button>
+      <button @click="cargarComments()">Obtener Comentarios</button>
+
+      <div v-if="post">
+        <h2>Posts:</h2>
+        <h3>{{ post.title }}</h3>
+        <p>{{ post.body }}</p>
+      </div>
+
+      <div v-if="comments.length > 0">
+        <h4>Comentarios:</h4>
+        <ul>
+          <li v-for="comment in comments" :key="comment.id">
+            <strong>{{ comment.name }}</strong> ({{ comment.email }})<br />
+            {{ comment.body }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- App2 va AFUERA y APARTE -->
+    <div id="app2">
+      <div class="alert alert-info">
+        <h4>Soy App2 - Me destruyo en {{countdown}} segundos</h4>
+      </div>
+    </div>
+
+    <script>
+      var app = new Vue({
+        el: "#app",
+        data: {
+          listaApp2: [],
+          postId: 1,
+          post: null,
+          comments: [], // ← Agregar para los comentarios
+        },
+        methods: {
+          crearApp2() {
+            var app2 = new Vue({
+              el: "#app2",
+              data: {
+                countdown: 5,
+                registrado: {
+                  beforeUpdate: false,
+                  updated: false,
+                },
+              },
+
+              beforeCreate() {
+                console.log("APP2 - beforeCreate:", Date.now());
+              },
+
+              created() {
+                console.log("APP2 - created:", Date.now());
+                app.listaApp2.push({
+                  id: app.listaApp2.length + 1,
+                  nombre: "APP2 - created",
+                  timestamp: Date.now(),
+                });
+              },
+
+              beforeMount() {
+                console.log("APP2 - beforeMount:", Date.now());
+                app.listaApp2.push({
+                  id: app.listaApp2.length + 1,
+                  nombre: "APP2 - beforeMount",
+                  timestamp: Date.now(),
+                });
+              },
+
+              mounted() {
+                console.log("APP2 - mounted:", Date.now());
+                app.listaApp2.push({
+                  id: app.listaApp2.length + 1,
+                  nombre: "APP2 - mounted",
+                  timestamp: Date.now(),
+                });
+
+                const interval = setInterval(() => {
+                  this.countdown--;
+                  if (this.countdown === 0) {
+                    clearInterval(interval);
+                    this.$destroy();
+                  }
+                }, 1000);
+              },
+
+              beforeUpdate() {
+                if (!this.registrado.beforeUpdate) {
+                  console.log("APP2 - beforeUpdate:", Date.now());
+                  app.listaApp2.push({
+                    id: app.listaApp2.length + 1,
+                    nombre: "APP2 - beforeUpdate",
+                    timestamp: Date.now(),
+                  });
+                  this.registrado.beforeUpdate = true;
+                }
+              },
+
+              updated() {
+                if (!this.registrado.updated) {
+                  console.log("APP2 - updated:", Date.now());
+                  app.listaApp2.push({
+                    id: app.listaApp2.length + 1,
+                    nombre: "APP2 - updated",
+                    timestamp: Date.now(),
+                  });
+                  this.registrado.updated = true;
+                }
+              },
+
+              beforeDestroy() {
+                console.log("APP2 - beforeDestroy:", Date.now());
+                app.listaApp2.push({
+                  id: app.listaApp2.length + 1,
+                  nombre: "APP2 - beforeDestroy",
+                  timestamp: Date.now(),
+                });
+              },
+
+              destroyed() {
+                console.log("APP2 - destroyed:", Date.now());
+                app.listaApp2.push({
+                  id: app.listaApp2.length + 1,
+                  nombre: "APP2 - destroyed",
+                  timestamp: Date.now(),
+                });
+              },
+            });
+          },
+
+          async obtenerPost(postId) {
+            try {
+              const response = await axios.get(
+                `https://jsonplaceholder.typicode.com/posts/${postId}`
+              );
+              return response.data;
+            } catch (error) {
+              console.error("Error:", error);
+            }
+          },
+
+          async obtenerComments(postId) {
+            try {
+              const response = await axios.get(
+                `https://jsonplaceholder.typicode.com/posts/${postId}/comments`
+              );
+              return response.data;
+            } catch (error) {
+              console.error("Error:", error);
+            }
+          },
+
+          async cargarPost() {
+            this.post = await this.obtenerPost(this.postId);
+            console.log(this.post);
+          },
+
+          async cargarComments() {
+            this.comments = await this.obtenerComments(this.postId);
+            console.log(this.comments);
+          },
+        },
+        mounted() {
+          setTimeout(() => {
+            this.crearApp2();
+          }, 2000);
+        },
+      });
+    </script>
+  </body>
+</html>

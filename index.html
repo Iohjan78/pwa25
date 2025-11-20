@@ -20,12 +20,10 @@
         {{persona.ciudad}}
       </p>
       <hr />
-      <!--  -------------------------------------------------------------------- -->
       <h4>Valor: {{valor}}</h4>
       <button class="" v-on:click="aumentar()">Incrementar</button>
       <button class="" v-on:click="disminuir()">Decrementar</button>
       <hr />
-      <!-- --------------------------------------------------------------------- -->
       <h4>Lista de Tareas</h4>
       <input type="text" v-model="nuevaTarea" placeholder="Nueva Tarea" />
       <button v-on:click="agregarTarea()">Agregar Tarea</button>
@@ -45,17 +43,6 @@
       <p>Total de Tareas: {{ totalTareas }}</p>
       <p>Tareas Pendientes: {{ tareasPendientes }}</p>
       <hr />
-      <!-- --------------------------------------------------------------------- -->
-      <h4>Hooks de App2 (en vivo):</h4>
-      <ul>
-        <li v-for="evento in listaApp2" :key="evento.id">
-          {{ evento.nombre }}: {{ evento.timestamp }}
-        </li>
-      </ul>
-    </div>
-    <!-- --------------------------------------------------------------------- -->
-    <div id="app2">
-      <h4>Soy App2 - Me destruyo en {{countdown}} segundos</h4>
     </div>
 
     <script>
@@ -74,7 +61,6 @@
             { id: 2, texto: "llamar al seguro", completada: false },
             { id: 3, texto: "comprar carne", completada: false },
           ],
-          listaApp2: [],
         },
         methods: {
           aumentar() {
@@ -93,99 +79,6 @@
               this.nuevaTarea = "";
             }
           },
-          crearApp2() {
-            var app2 = new Vue({
-              el: "#app2",
-              data: {
-                countdown: 5,
-                registrado: {
-                  beforeUpdate: false,
-                  updated: false,
-                },
-              },
-
-              beforeCreate() {
-                console.log("APP2 - beforeCreate:", Date.now());
-              },
-
-              created() {
-                console.log("APP2 - created:", Date.now());
-                app.listaApp2.push({
-                  id: app.listaApp2.length + 1,
-                  nombre: "APP2 - created",
-                  timestamp: Date.now(),
-                });
-              },
-
-              beforeMount() {
-                console.log("APP2 - beforeMount:", Date.now());
-                app.listaApp2.push({
-                  id: app.listaApp2.length + 1,
-                  nombre: "APP2 - beforeMount",
-                  timestamp: Date.now(),
-                });
-              },
-
-              mounted() {
-                console.log("APP2 - mounted:", Date.now());
-                app.listaApp2.push({
-                  id: app.listaApp2.length + 1,
-                  nombre: "APP2 - mounted",
-                  timestamp: Date.now(),
-                });
-
-                const interval = setInterval(() => {
-                  this.countdown--;
-                  if (this.countdown === 0) {
-                    clearInterval(interval);
-                    this.$destroy();
-                  }
-                }, 1000);
-              },
-
-              beforeUpdate() {
-                if (!this.registrado.beforeUpdate) {
-                  console.log("APP2 - beforeUpdate:", Date.now());
-                  app.listaApp2.push({
-                    id: app.listaApp2.length + 1,
-                    nombre: "APP2 - beforeUpdate",
-                    timestamp: Date.now(),
-                  });
-                  this.registrado.beforeUpdate = true;
-                }
-              },
-
-              updated() {
-                if (!this.registrado.updated) {
-                  console.log("APP2 - updated:", Date.now());
-                  app.listaApp2.push({
-                    id: app.listaApp2.length + 1,
-                    nombre: "APP2 - updated",
-                    timestamp: Date.now(),
-                  });
-                  this.registrado.updated = true;
-                }
-              },
-
-              beforeDestroy() {
-                console.log("APP2 - beforeDestroy:", Date.now());
-                app.listaApp2.push({
-                  id: app.listaApp2.length + 1,
-                  nombre: "APP2 - beforeDestroy",
-                  timestamp: Date.now(),
-                });
-              },
-
-              destroyed() {
-                console.log("APP2 - destroyed:", Date.now());
-                app.listaApp2.push({
-                  id: app.listaApp2.length + 1,
-                  nombre: "APP2 - destroyed",
-                  timestamp: Date.now(),
-                });
-              },
-            });
-          },
         },
         computed: {
           totalTareas() {
@@ -194,11 +87,6 @@
           tareasPendientes() {
             return this.tareas.filter((tarea) => !tarea.completada).length;
           },
-        },
-        mounted() {
-          setTimeout(() => {
-            this.crearApp2();
-          }, 2000);
         },
       });
     </script>
