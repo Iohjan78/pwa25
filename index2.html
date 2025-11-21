@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TP2 - Ejercicio 1: Hooks</title>
+    <title>TP2 - Completo</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.7.16/vue.min.js"></script>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css"
@@ -13,7 +13,7 @@
   </head>
   <body>
     <div id="app">
-      <h2>Ejercicio 1 - Monitoreo de Hooks (App2)</h2>
+      <h2>TP2 - Punto 1: Monitoreo de Hooks (App2)</h2>
 
       <!-- tp2 punto 1 -->
       <h4>Hooks de App2 (Monitoreando en vivo):</h4>
@@ -26,13 +26,12 @@
       <hr />
 
       <!-- tp2 punto 2 -->
-      <h4>Punto 2 - Axios</h4>
+      <h4>Punto 2 - Axios (Manual)</h4>
       <input type="number" v-model="postId" placeholder="ID del post" />
       <button @click="cargarPost()">Obtener Post</button>
       <button @click="cargarComments()">Obtener Comentarios</button>
 
       <div v-if="post">
-        <h2>Posts:</h2>
         <h3>{{ post.title }}</h3>
         <p>{{ post.body }}</p>
       </div>
@@ -41,6 +40,32 @@
         <h4>Comentarios:</h4>
         <ul>
           <li v-for="comment in comments" :key="comment.id">
+            <strong>{{ comment.name }}</strong> ({{ comment.email }})<br />
+            {{ comment.body }}
+          </li>
+        </ul>
+      </div>
+
+      <hr />
+
+      <!-- tp2 punto 3 -->
+      <h4>Punto 3 - Lista de 10 Posts</h4>
+      <h5>Posts disponibles (click para ver comentarios):</h5>
+      <ul>
+        <li
+          v-for="post in listaPosts"
+          :key="post.id"
+          @click="clickEnPost(post.id)"
+          style="cursor: pointer; color: blue"
+        >
+          {{ post.id }}. {{ post.title }}
+        </li>
+      </ul>
+
+      <div v-if="listaComentarios.length > 0">
+        <h5>Comentarios del post seleccionado:</h5>
+        <ul>
+          <li v-for="comment in listaComentarios" :key="comment.id">
             <strong>{{ comment.name }}</strong> ({{ comment.email }})<br />
             {{ comment.body }}
           </li>
@@ -59,10 +84,17 @@
       var app = new Vue({
         el: "#app",
         data: {
+          // punto 1
           listaApp2: [],
+
+          // punto 2
           postId: 1,
           post: null,
-          comments: [], // ← Agregar para los comentarios
+          comments: [],
+
+          // punto 3
+          listaPosts: [],
+          listaComentarios: [],
         },
         methods: {
           crearApp2() {
@@ -159,6 +191,7 @@
             });
           },
 
+          // Funciones de Axios (Punto 2 y 3)
           async obtenerPost(postId) {
             try {
               const response = await axios.get(
@@ -181,6 +214,7 @@
             }
           },
 
+          // Punto 2
           async cargarPost() {
             this.post = await this.obtenerPost(this.postId);
             console.log(this.post);
@@ -190,11 +224,27 @@
             this.comments = await this.obtenerComments(this.postId);
             console.log(this.comments);
           },
+
+          // Punto 3
+          async cargarPrimeros10Posts() {
+            for (let i = 1; i <= 10; i++) {
+              const post = await this.obtenerPost(i);
+              this.listaPosts.push(post);
+            }
+            console.log("10 posts cargados:", this.listaPosts);
+          },
+
+          async clickEnPost(postId) {
+            console.log("Click en post:", postId);
+            this.listaComentarios = await this.obtenerComments(postId);
+          },
         },
-        mounted() {
+        async mounted() {
           setTimeout(() => {
             this.crearApp2();
           }, 2000);
+
+          await this.cargarPrimeros10Posts();
         },
       });
     </script>
