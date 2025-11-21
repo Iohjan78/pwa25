@@ -73,7 +73,7 @@
       </div>
     </div>
 
-    <!-- App2 va AFUERA y APARTE -->
+    <!-- App2 -->
     <div id="app2">
       <div class="alert alert-info">
         <h4>Soy App2 - Me destruyo en {{countdown}} segundos</h4>
@@ -191,7 +191,6 @@
             });
           },
 
-          // Funciones de Axios (Punto 2 y 3)
           async obtenerPost(postId) {
             try {
               const response = await axios.get(
@@ -214,7 +213,7 @@
             }
           },
 
-          // Punto 2
+          // punto 2
           async cargarPost() {
             this.post = await this.obtenerPost(this.postId);
             console.log(this.post);
@@ -225,7 +224,7 @@
             console.log(this.comments);
           },
 
-          // Punto 3
+          // punto 3
           async cargarPrimeros10Posts() {
             for (let i = 1; i <= 10; i++) {
               const post = await this.obtenerPost(i);
